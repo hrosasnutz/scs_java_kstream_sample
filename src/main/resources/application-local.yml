@@ -1,0 +1,19 @@
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: kafka:9291
+        streams:
+          binder:
+            brokers: kafka:9291
+
+server:
+  port: 8000
+
+logging:
+  level:
+    root: info
+    org.apache.zookeeper: error
+    org.apache.kafka: error
+    io.spring.scs_java_kstream_sample: debug

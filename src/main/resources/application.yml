@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: scs_java_kstream_sample
+  config:
+    import: "optional:configserver:${SERVER_CONFIG_URL:}"
+  cloud:
+    function:
+      definition: countCustomerPerTypes
+    stream:
+      output-bindings: customerGenerator
+      bindings:
+        customerGenerator-out-0:
+          destination: io.spring.scs_java_kstream_sample.customers
+        countCustomerPerTypes-in-0:
+          destination: io.spring.scs_java_kstream_sample.customers
+          group: analytics
+        countCustomerPerTypes-out-0:
+          destination: io.spring.scs_java_kstream_sample.analytics.count_customer_per_types
+      kafka:
+        binder:
+          auto-create-topics: true
+          auto-add-partitions: true
+          auto-alter-topics: true
+        streams:
+          binder:
+            auto-create-topics: true
+            auto-add-partitions: true
+            auto-alter-topics: true
+            functions:
+              countCustomerPerTypes:
+                application-id: countCustomerPerTypes
