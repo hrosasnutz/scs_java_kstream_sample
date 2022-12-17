@@ -2,20 +2,37 @@ spring:
   application:
     name: scs_java_kstream_sample
   config:
-    import: "optional:configserver:${SERVER_CONFIG_URL:}"
+    import: "optional:configserver:${SERVER_CONFIG_URL:http://localhost:8081/}"
   cloud:
     function:
-      definition: countCustomerPerTypes
+      definition: countCustomersPerTypes;countCustomersPerCountries;filterActiveCustomers;branchPrivilegedCustomers
     stream:
       output-bindings: customerGenerator
       bindings:
         customerGenerator-out-0:
           destination: io.spring.scs_java_kstream_sample.customers
-        countCustomerPerTypes-in-0:
+        countCustomersPerTypes-in-0:
           destination: io.spring.scs_java_kstream_sample.customers
-          group: analytics
-        countCustomerPerTypes-out-0:
-          destination: io.spring.scs_java_kstream_sample.analytics.count_customer_per_types
+          group: ccpt_analytics
+        countCustomersPerTypes-out-0:
+          destination: io.spring.scs_java_kstream_sample.analytics.count_customers_per_types
+        countCustomersPerCountries-in-0:
+          destination: io.spring.scs_java_kstream_sample.customers
+          group: ccpc_analytics
+        countCustomersPerCountries-out-0:
+          destination: io.spring.scs_java_kstream_sample.analytics.count_customers_per_countries
+        filterActiveCustomers-in-0:
+          destination: io.spring.scs_java_kstream_sample.customers
+          group: fac_analytics
+        filterActiveCustomers-out-0:
+          destination: io.spring.scs_java_kstream_sample.analytics.filter_active_customers
+        branchPrivilegedCustomers-in-0:
+          destination: io.spring.scs_java_kstream_sample.customers
+          group: bpc_analytics
+        branchPrivilegedCustomers-out-0:
+          destination: io.spring.scs_java_kstream_sample.customers.branch_not_privileged_customers
+        branchPrivilegedCustomers-out-1:
+          destination: io.spring.scs_java_kstream_sample.customers.branch_is_privileged_customers 
       kafka:
         binder:
           auto-create-topics: true
@@ -29,3 +46,9 @@ spring:
             functions:
               countCustomerPerTypes:
                 application-id: countCustomerPerTypes
+              countCustomersPerCountries:
+                application-id: countCustomersPerCountries
+              filterActiveCustomers:
+                application-id: filterActiveCustomers
+              branchPrivilegedCustomers:
+                application-id: branchPrivilegedCustomers
