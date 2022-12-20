@@ -5,22 +5,24 @@ spring:
     import: "optional:configserver:${SERVER_CONFIG_URL:http://localhost:8081/}"
   cloud:
     function:
-      definition: countCustomersPerTypes;countCustomersPerCountries;filterActiveCustomers;branchPrivilegedCustomers
+      definition: countCustomersPerTypes;countCustomersPerNationalities;filterActiveCustomers;branchPrivilegedCustomers;aggregateCustomersPerNationalities;reduceAddressesToCountry;materializedViewCustomersAndAddresses
     stream:
-      output-bindings: customerGenerator
+      output-bindings: customerGenerator;addressGenerator
       bindings:
         customerGenerator-out-0:
           destination: io.spring.scs_java_kstream_sample.customers
+        addressGenerator-out-0:
+          destination: io.spring.scs_java_kstream_sample.addresses
         countCustomersPerTypes-in-0:
           destination: io.spring.scs_java_kstream_sample.customers
           group: ccpt_analytics
         countCustomersPerTypes-out-0:
           destination: io.spring.scs_java_kstream_sample.analytics.count_customers_per_types
-        countCustomersPerCountries-in-0:
+        countCustomersPerNationalities-in-0:
           destination: io.spring.scs_java_kstream_sample.customers
-          group: ccpc_analytics
-        countCustomersPerCountries-out-0:
-          destination: io.spring.scs_java_kstream_sample.analytics.count_customers_per_countries
+          group: ccpn_analytics
+        countCustomersPerNationalities-out-0:
+          destination: io.spring.scs_java_kstream_sample.analytics.count_customers_per_nationalities
         filterActiveCustomers-in-0:
           destination: io.spring.scs_java_kstream_sample.customers
           group: fac_analytics
@@ -32,7 +34,25 @@ spring:
         branchPrivilegedCustomers-out-0:
           destination: io.spring.scs_java_kstream_sample.customers.branch_not_privileged_customers
         branchPrivilegedCustomers-out-1:
-          destination: io.spring.scs_java_kstream_sample.customers.branch_is_privileged_customers 
+          destination: io.spring.scs_java_kstream_sample.customers.branch_is_privileged_customers
+        aggregateCustomersPerNationalities-in-0:
+          destination: io.spring.scs_java_kstream_sample.customers
+          group: acpn_analytics
+        aggregateCustomersPerNationalities-out-0:
+          destination: io.spring.scs_java_kstream_sample.customers.aggregate_customers_per_nationalities
+        reduceAddressesToCountry-in-0:
+          destination: io.spring.scs_java_kstream_sample.addresses
+          group: ratc_analytics
+        reduceAddressesToCountry-out-0:
+          destination: io.spring.scs_java_kstream_sample.addresses.reduce_addresses_to_country
+        materializedViewCustomersAndAddresses-in-0:
+          destination: io.spring.scs_java_kstream_sample.customers
+          group: mvcaa_analytics
+        materializedViewCustomersAndAddresses-in-1:
+          destination: io.spring.scs_java_kstream_sample.addresses
+          group: mvcaa_analytics
+        materializedViewCustomersAndAddresses-out-0:
+          destination: io.spring.scs_java_kstream_sample.materialized_view_customers_and_addresses
       kafka:
         binder:
           auto-create-topics: true
@@ -46,9 +66,15 @@ spring:
             functions:
               countCustomerPerTypes:
                 application-id: countCustomerPerTypes
-              countCustomersPerCountries:
-                application-id: countCustomersPerCountries
+              countCustomersPerNationalities:
+                application-id: countCustomersPerNationalities
               filterActiveCustomers:
                 application-id: filterActiveCustomers
               branchPrivilegedCustomers:
                 application-id: branchPrivilegedCustomers
+              aggregateCustomersPerNationalities:
+                application-id: aggregateCustomersPerNationalities
+              reduceAddressesToCountry:
+                application-id: reduceAddressesToCountry
+              materializedViewCustomersAndAddresses:
+                application-id: materializedViewCustomersAndAddresses

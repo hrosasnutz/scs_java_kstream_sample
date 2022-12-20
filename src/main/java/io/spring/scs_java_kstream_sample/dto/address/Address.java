@@ -1,6 +1,5 @@
-package io.spring.scs_java_kstream_sample.dto.customer;
+package io.spring.scs_java_kstream_sample.dto.address;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -13,12 +12,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class Address {
     private UUID id;
-    private String name;
-    private Type type;
-    private Boolean active;
-    private String nationality;
-    private LocalDate birthdate;
+    private UUID customerId;
+    private String fullAddress;
+    private String street;
+    private String zipCode;
+    private String city;
+    private String state;
+    private Country country;
     private LocalDateTime createdAt;
 }
