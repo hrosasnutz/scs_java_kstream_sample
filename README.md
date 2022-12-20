@@ -1,4 +1,4 @@
-# scs_java_kstream_sample
+# Spring Cloud Stream with Kafka Streams using Java
 Demo project for Kafka Streams using SCS and Java 17
 
 ## Host
